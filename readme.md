@@ -8,13 +8,17 @@ It can take your Laravel API application and make it fully scalable, with the po
 All you need to do is add install the package via composer
 
 ```
-composer require bla bla
+composer require uruloke/lambdavel
 ```
 
 And run 
 
 ```
 php artisan vendor:publish
+...
+[x] Provider: Uruloke\Lambdavel\LambdaServiceProvider
+...
+
 ```
 
 Choose our package and there will then be added a file in your root directory called `template.yml`, which is AWS 

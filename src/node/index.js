@@ -32,7 +32,7 @@ exports.handler = function(event, context) {
     // Spawn the PHP CGI process with a bunch of environment variables that describe the request.
     var scriptPath = path.resolve('public/index.php');
 
-    var php = spawn('../../resources/php-7/bin/php-cgi', ['-f', scriptPath], {
+    var php = spawn('vendor/uruloke/lambdavel/resources/php-7/bin/php-cgi', ['-f', scriptPath], {
         env: Object.assign({
             REDIRECT_STATUS: 200,
             REQUEST_METHOD: requestMethod,
