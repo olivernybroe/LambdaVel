@@ -4,6 +4,7 @@
 namespace Uruloke\Lambdavel;
 
 
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\ServiceProvider;
 use Symfony\Component\HttpFoundation\ServerBag;
 
