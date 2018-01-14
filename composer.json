@@ -1,0 +1,42 @@
+{
+  "name": "uruloke/lambdaVel",
+  "type": "library",
+  "description": "Recurring calendar events for Laravel",
+  "license": "MIT",
+  "keywords": [
+    "laravel",
+    "Amazon",
+    "Lambda"
+  ],
+  "require": {
+    "php": ">=7.1",
+    "illuminate/support": "^5.5"
+  },
+  "require-dev": {
+    "orchestra/testbench": "~3.5",
+    "phpunit/phpunit": "~6.0"
+  },
+  "authors": [
+    {
+      "name": "Oliver Nybroe",
+      "email": "olivernybroe@gmail.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Uruloke\\LambdaVel\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Uruloke\\LambdaVel\\Test\\": "Tests/"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Uruloke\\LambdaVel\\LambdaServiceProvider"
+      ]
+    }
+  }
+}
