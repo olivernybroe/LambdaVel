@@ -1,15 +1,12 @@
 const spawn = require("child_process").spawnSync;
-const parser = require("http-string-parser");
 var path = require("path");
 
 exports.handler = function(event, context) {
-    console.log("started");
 
     // Sets some sane defaults here so that this function doesn't fail
     // when it's not handling a HTTP request from API Gateway.
     var requestMethod = event.httpMethod || 'GET';
     var requestBody = event.body || '';
-    var serverName = event.headers ? event.headers.Host : 'lambda_test.dev';
     var requestUri = event.path || '';
     var headers = {};
     var queryParams = '';
@@ -34,16 +31,14 @@ exports.handler = function(event, context) {
 
     // Spawn the PHP CGI process with a bunch of environment variables that describe the request.
     var scriptPath = path.resolve('public/index.php');
-    console.log(scriptPath);
 
-    var php = spawn('resources/php-7/bin/php-cgi', ['-f', scriptPath], {
+    var php = spawn('../../resources/php-7/bin/php-cgi', ['-f', scriptPath], {
         env: Object.assign({
             REDIRECT_STATUS: 200,
             REQUEST_METHOD: requestMethod,
             SCRIPT_FILENAME: scriptPath,
             SCRIPT_NAME: '/index.php',
             PATH_INFO: '/',
-            SERVER_NAME: serverName,
             SERVER_PROTOCOL: 'HTTP/1.1',
             REQUEST_URI: requestUri,
             QUERY_STRING: queryParams,
@@ -53,8 +48,8 @@ exports.handler = function(event, context) {
         input: requestBody
     });
 
-    // When the process exists, we should have a compvare HTTP response to send back to API Gateway.
-    var parsedResponse = parser.parseResponse(php.stdout.toString('utf-8'));
+    // When the process exists, we should have a compare HTTP response to send back to API Gateway.
+    var parsedResponse = parseResponse(php.stdout.toString('utf-8'));
 
     // Signals the end of the Lambda function, and passes the provided object back to API Gateway.
     context.succeed({
@@ -62,4 +57,50 @@ exports.handler = function(event, context) {
         headers: parsedResponse.headers,
         body: parsedResponse.body
     });
+};
+
+
+parseResponse = function(responseString) {
+    var headerLines, line, lines, parsedStatusLine, response;
+    response = {};
+    lines = responseString.split(/\r?\n/);
+    parsedStatusLine = parseStatusLine(lines.shift());
+    response['protocolVersion'] = parsedStatusLine['protocol'];
+    response['statusCode'] = parsedStatusLine['statusCode'];
+    response['statusMessage'] = parsedStatusLine['statusMessage'];
+    headerLines = [];
+    while (lines.length > 0) {
+        line = lines.shift();
+        if (line === "") {
+            break;
+        }
+        headerLines.push(line);
+    }
+    response['headers'] = parseHeaders(headerLines);
+    response['body'] = lines.join('\r\n');
+    return response;
+};
+
+parseHeaders = function(headerLines) {
+    var headers, key, line, parts, _i, _len;
+    headers = {};
+    for (_i = 0, _len = headerLines.length; _i < _len; _i++) {
+        line = headerLines[_i];
+        parts = line.split(":");
+        key = parts.shift();
+        headers[key] = parts.join(":").trim();
+    }
+    return headers;
+};
+
+parseStatusLine = function(statusLine) {
+    var parsed, parts;
+    parts = statusLine.match(/^(.+) ([0-9]{3}) (.*)$/);
+    parsed = {};
+    if (parts !== null) {
+        parsed['protocol'] = parts[1];
+        parsed['statusCode'] = parts[2];
+        parsed['statusMessage'] = parts[3];
+    }
+    return parsed;
 };

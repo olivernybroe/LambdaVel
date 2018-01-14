@@ -2,16 +2,21 @@ AWSTemplateFormatVersion : '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 
 Description: |
-  An example RESTful service
+  Laravel as a lambda
 Resources:
-  ExampleFunction:
+  LaravelFunction:
     Type: AWS::Serverless::Function
     Properties:
       Runtime: nodejs6.10
-      Handler: vendor/uruloke/lambdaVel/src/node/index.handler
+      Handler: vendor/uruloke/lambdavel/src/node/index.handler
       Events:
-        ListCustomers:
+        rootPath:
           Type: Api
           Properties:
             Path: /
+            Method: any
+        SubPaths:
+          Type: Api
+          Properties:
+            Path: /{thepath+}
             Method: any

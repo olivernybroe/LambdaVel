@@ -1,7 +1,7 @@
 {
-  "name": "uruloke/lambdaVel",
+  "name": "uruloke/lambdavel",
   "type": "library",
-  "description": "Recurring calendar events for Laravel",
+  "description": "AWS lambda for Laravel.",
   "license": "MIT",
   "keywords": [
     "laravel",
@@ -24,18 +24,18 @@
   ],
   "autoload": {
     "psr-4": {
-      "Uruloke\\LambdaVel\\": "src"
+      "Uruloke\\Lambdavel\\": "src"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "Uruloke\\LambdaVel\\Test\\": "Tests/"
+      "Uruloke\\Lambdavel\\Test\\": "Tests/"
     }
   },
   "extra": {
     "laravel": {
       "providers": [
-        "Uruloke\\LambdaVel\\LambdaServiceProvider"
+        "Uruloke\\Lambdavel\\LambdaServiceProvider"
       ]
     }
   }
